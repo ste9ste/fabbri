@@ -1,3 +1,5 @@
+![fabrix](https://github.com/user-attachments/assets/8386bbcf-6605-441a-b3de-f4197eaaf1df)
+
 La situazione del settore secondario, in Italia, come nel resto del mondo, è sempre più critica. I costi energetici, delle materie prime e del personale fanno lievitare ogni giorno i costi di produzione, costringendo le aziende ad effettuare sempre più frequenti analisi di costi per capire come e dove risparmiare. Come purtroppo abbiamo visto negli ultimi anni, le aziende meno organizzate sono destinate a chiudere o ad essere assorbite da realtà più strutturate.
 
 In alcuni casi, però, l'analisi delle criticità aziendali e dei processi interni può fare una grande differenza, ottimizzando la produzione, identificando i colli di bottiglia, eliminado gli sprechi ed i tempi morti, capendo quali prodotti sono più remunerativi degli altri e scoprendo quali reparti hanno bisogno di attenzione.
