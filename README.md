@@ -1,6 +1,12 @@
 ![fabrix](https://github.com/user-attachments/assets/8386bbcf-6605-441a-b3de-f4197eaaf1df)
 
-CONTESTO PRODUTTIVO E AZIENDALE
+<b>Fabrix: dashboard per l’ottimizzazione produttiva</b>
+
+Fabrix è un software che si propone di portare alla portata del managing tutte le informazioni utili a pianificare le produzioni e ottimizzare i processi, sbloccando i benefici che abbiamo appena menzionato.
+
+Fabrix è prima di tutto un concetto che vuol rivoluzionare la gestione dei processi di produzione aziendale, semplificando l'accesso alle informazioni e la loro chiara rappresentazione.
+
+<b>CONTESTO PRODUTTIVO E AZIENDALE</b>
 
 La situazione del settore secondario, in Italia, come nel resto del mondo, è sempre più critica. I costi energetici, delle materie prime e del personale fanno lievitare ogni giorno la spesa per la produzione, costringendo le aziende ad effettuare analisi di costo sempre più frequenti, per capire come e dove risparmiare. Come purtroppo abbiamo visto negli ultimi anni, le aziende meno organizzate, poco innovative, sono destinate a chiudere o ad essere assorbite da realtà più strutturate.
 
