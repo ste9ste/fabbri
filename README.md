@@ -1,6 +1,6 @@
 ![fabrix](https://github.com/user-attachments/assets/8386bbcf-6605-441a-b3de-f4197eaaf1df)
 
-<b>Fabrix: dashboard per l’ottimizzazione produttiva</b>
+<b>FABRIX: DASHBOARD PER L'OTTIMIZZAZIONE PRODUTTIVA</b>
 
 Fabrix è un software che si propone di portare alla portata del managing tutte le informazioni utili a pianificare le produzioni e ottimizzare i processi, sbloccando i benefici che abbiamo appena menzionato.
 
