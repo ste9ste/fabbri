@@ -20,11 +20,9 @@ Guardando ai reparti, alcuni sono esclusivamente con produzione in linea ed altr
 
 Fabrix rientra perfettamente nei bisogni del settore e di questa azienda specifica, perché può essere utilizzata per simulare diversi scenari di produzione, acquisendo informazioni utili a pianificare le produzioni ed ottimizzare i processi, sbloccando infine benefici e vantaggi come il risparmio di risorse e di tempo.
 
-PROCESSO SEGUITO PER LO SVILUPPO
+<b>PROCESSO SEGUITO PER LO SVILUPPO</b>
 
 - Fase 1: ideazione del programma, recupero e analisi delle informazioni dell’azienda
 - Fase 2: schema di base del programma, creazione simulazione a riga di comando, test per coerenza dei dati
 - Fase 3: sviluppo e integrazione interfaccia grafica, adattamento del simulatore
 - Fase 4: validazione dei dati, commento del codice, debug, test e miglioramenti 
-
-![image](https://github.com/user-attachments/assets/b1c0dce9-8e6a-40c6-9012-0537f240d246)
