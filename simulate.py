@@ -7,7 +7,7 @@
 import random
 import datetime
 
-# Funzione che viene richiamata dalla GUI con lo scopo di
+# Funzione che viene richiamata dalla GUI con lo scopo di generare la simulazione della produzione
 def simulate(checkboxPercentualeProdottiFallati, checkboxPercentualeProdottiPrelevati, checkboxProbabilitaGuasti, checkboxTempoDiSettaggio):
 
     parametriProduzione = generaParametriProduzione() # Genero i paramtri di produzione
@@ -18,7 +18,7 @@ def simulate(checkboxPercentualeProdottiFallati, checkboxPercentualeProdottiPrel
 
     # Gestisco le dinamiche dei "Prodotti Fallati", se il parametro "Percentuale Prodotti Fallati" è attivo
     if checkboxPercentualeProdottiFallati:
-        percentualeFallati = round(random.uniform(0.5, 2), 2) # Calcola casualmente la percentuale di prodotti fallati entro il range stabilito
+        percentualeFallati = round(random.uniform(0.8, 2.8), 2) # Calcola casualmente la percentuale di prodotti fallati entro il range stabilito
 
         # Aggiorna il numero totale di prodotti per includere la percentuale fallata
         for prodotto in numeroProdotti: # Ciclo attraverso ogni tipologia di prodotto nel dizionario
@@ -40,31 +40,51 @@ def simulate(checkboxPercentualeProdottiFallati, checkboxPercentualeProdottiPrel
     if checkboxProbabilitaGuasti:
         oreDiProduzione = tempoProduzioneTotale / 60 # Recupero le ore di produzione totali stimate
         giornateDiProduzione = oreDiProduzione / 24 # Recupero le giornate di produzione totali stimate
-        probabilitaGuasti = random.randint(1, 3)  # Calcola casualmente la frequenza dei guasti entro il range stabilito
-        tempoRisoluzioneGuasto = random.randint(60, 120) # Calcola casualmente il tempo di ripristino dai guasti entro il range stabilito
-        numeroGuasti = int(giornateDiProduzione / probabilitaGuasti)  # Calcolo il numero di guasti che rientratno nel periodo di produzione
-        tempoProduzioneTotale += numeroGuasti * tempoRisoluzioneGuasto # Aggiungo al tempo di produzione totale il tempo aggiuntivo causato dai guasti
+        probabilitaGuastiDeformatrice = random.randint(10, 20)  # Calcola casualmente la frequenza dei guasti deformatrice entro il range stabilito
+        probabilitaGuastiForatrice = random.randint(5, 9)  # Calcola casualmente la frequenza dei guasti foratrice entro il range stabilito
+        probabilitaGuastiTornitura = random.randint(14,28)  # Calcola casualmente la frequenza dei guasti tornitura entro il range stabilito
+        tempoRisoluzioneGuastoDeformatrice = random.randint(1000, 2000) # Calcola casualmente il tempo di ripristino dai guasti deformatrice entro il range stabilito
+        tempoRisoluzioneGuastoForatrice = random.randint(150,210)  # Calcola casualmente il tempo di ripristino dai guasti foratrice entro il range stabilito
+        tempoRisoluzioneGuastoTornitura = random.randint(2500,3500)  # Calcola casualmente il tempo di ripristino dai guasti tornitura entro il range stabilito
+        numeroGuastiDeformatrice = int(giornateDiProduzione / probabilitaGuastiDeformatrice)  # Calcolo il numero di guasti deformatrice che rientrano nel periodo di produzione
+        numeroGuastiForatrice = int(giornateDiProduzione / probabilitaGuastiForatrice)  # Calcolo il numero di guasti deformatrice che rientrano nel periodo di produzione
+        numeroGuastiTornitura = int(giornateDiProduzione / probabilitaGuastiTornitura)  # Calcolo il numero di guasti deformatrice che rientrano nel periodo di produzione
+
+        numeroGuasti =  numeroGuastiDeformatrice + numeroGuastiForatrice+ numeroGuastiTornitura # Nel campo probabilità guasti inserisco il numero totale di guasti
+        tempoRisoluzioneGuasti =  (numeroGuastiDeformatrice * tempoRisoluzioneGuastoDeformatrice) + (numeroGuastiForatrice * tempoRisoluzioneGuastoForatrice) + (numeroGuastiTornitura + tempoRisoluzioneGuastoTornitura) # Somma totale del tempo impiegato per risolvere i guasti
+
+        tempoProduzioneTotale +=  tempoRisoluzioneGuasti # Aggiungo al tempo di produzione totale il tempo aggiuntivo causato dai guasti
 
     # Gestisco le dinamiche dei "Tempo di settaggio", se il parametro "Tempo di settaggii" è attivo
     if checkboxTempoDiSettaggio:
-        tempoDiSettaggio = random.randint(30, 120) # Calcolo casualmente il tempo di settaggio entro il range stabilito
-        tempoProduzioneTotale += tempoDiSettaggio * 3  # Aggiungo al tempo di produzione totale il tempo aggiuntivo derivato dall'attrezzeria dei tre prodotti nel reparto di stampaggio (gli altri reparti non necessitano di attrezzaggio)
+        # Alcuni prodotti non necessitano di alcuni reparti quindi moltiplico il tempo settaggio reparti per il numero di prodotti che sono lavorati nel reparto
+        tempoDiSettaggioLaser = 3 * random.randint(100, 140) # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Taglio
+        tempoDiSettaggioTrattamentoTermico = 3 * random.randint(10,20)  # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Trattamento Termico
+        tempoDiSettaggioImballo = 3 * random.randint(5,15)  # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Imballlo
+        tempoDiSettaggioDeformatura = 2 * random.randint(220,260)  # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Deformatura
+        tempoDiSettaggioTornitura = 1 * random.randint(250,350)  # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Tornitura
+        tempoDiSettaggioPiegatura = 1 * random.randint(20,40)  # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Piegatura
+        tempoDiSettaggioForatura = 1 * random.randint(100, 140)  # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Foratura
+        tempoDiSettaggioSaldatura = 1 * random.randint(20,40)  # Calcolo casualmente il tempo di settaggio entro il range stabilito reparto Saldatura
 
-    tempoDiProduzioneProdotto1 = 0 # Inizializzazione dei tempi totali di produzione per il prodotto 1: "Raccorderia a pressare"
-    tempoDiProduzioneProdotto2 = 0 # Inizializzazione dei tempi totali di produzione per il prodotto 2: "Sistemi di scarico"
-    tempoDiProduzioneProdotto3 = 0 # Inizializzazione dei tempi totali di produzione per il prodotto 3: "Collari"
+        # Sommo il tempo di settaggio dei singoli reparti
+        tempoDiSettaggio = tempoDiSettaggioLaser + tempoDiSettaggioTrattamentoTermico + tempoDiSettaggioImballo + tempoDiSettaggioDeformatura + tempoDiSettaggioTornitura + tempoDiSettaggioPiegatura + tempoDiSettaggioForatura + tempoDiSettaggioSaldatura
 
-    # Calcolo del tempo totale di produzione per il prodotto "Raccorderia a pressare"
-    for chiave, tempo in parametriProduzione["Raccorderia a pressare"].items(): # Ciclo attraverso ogni processo produttivo associato al prodotto "Raccorderia a pressare"
-        tempoDiProduzioneProdotto1 += tempo  # Aggiungo il tempo di ciascun processo al tempo totale di produzione per il prodotto "Raccorderia a pressare"
+    tempoDiProduzioneProdotto1 = 0 # Inizializzazione dei tempi totali di produzione per il prodotto 1: "Curve"
+    tempoDiProduzioneProdotto2 = 0 # Inizializzazione dei tempi totali di produzione per il prodotto 2: "Tee"
+    tempoDiProduzioneProdotto3 = 0 # Inizializzazione dei tempi totali di produzione per il prodotto 3: "Manicotti"
 
-    # Calcola i tempi di produzione per il prodotto "Sistemi di scarico"
-    for chiave, tempo in parametriProduzione["Sistemi di scarico"].items(): # Ciclo attraverso ogni processo produttivo associato al prodotto "Sistemi di scarico"
-        tempoDiProduzioneProdotto2 += tempo # Aggiungo il tempo di ciascun processo al tempo totale di produzione per il prodotto "Sistemi di scarico"
+    # Calcolo del tempo totale di produzione per il prodotto "Curve"
+    for chiave, tempo in parametriProduzione["Curve"].items(): # Ciclo attraverso ogni processo produttivo associato al prodotto "Curve"
+        tempoDiProduzioneProdotto1 += tempo  # Aggiungo il tempo di ciascun processo al tempo totale di produzione per il prodotto "Curve"
 
-    # Calcola i tempi di produzione per il prodotto "Collari"
-    for chiave, tempo in parametriProduzione["Collari"].items(): # Ciclo attraverso ogni processo produttivo associato al prodotto "Collari"
-        tempoDiProduzioneProdotto3 += tempo # Aggiungo il tempo di ciascun processo al tempo totale di produzione per il prodotto "Collari"
+    # Calcola i tempi di produzione per il prodotto "Tee"
+    for chiave, tempo in parametriProduzione["Tee"].items(): # Ciclo attraverso ogni processo produttivo associato al prodotto "Tee"
+        tempoDiProduzioneProdotto2 += tempo # Aggiungo il tempo di ciascun processo al tempo totale di produzione per il prodotto "Tee"
+
+    # Calcola i tempi di produzione per il prodotto "Manicotti"
+    for chiave, tempo in parametriProduzione["Manicotti"].items(): # Ciclo attraverso ogni processo produttivo associato al prodotto "Manicotti"
+        tempoDiProduzioneProdotto3 += tempo # Aggiungo il tempo di ciascun processo al tempo totale di produzione per il prodotto "Manicotti"
 
     capacitaProduttiva = calcolatoreCapacitaReparto(parametriProduzione) # Richiamo la funzione per calcolare la capacità produttiva giornaliera di ogni reparto per ogni prodotto
 
@@ -72,31 +92,77 @@ def simulate(checkboxPercentualeProdottiFallati, checkboxPercentualeProdottiPrel
     risultati = {
         'percentualeProdottiFallati': percentualeFallati if checkboxPercentualeProdottiFallati else "Non attivo", # Registro nel dizionario la percentuale di prodotti fallati (se attivo)
         'percentualeProdottiPrelevati': percentualePrelevati if checkboxPercentualeProdottiPrelevati else "Non attivo", # Registro nel dizionario la percentuale di prodotti prelevati (se attivo)
-        'probabilitaGuasti': probabilitaGuasti if checkboxProbabilitaGuasti else "Non attivo", # Registro nel dizionario la probabilità di guasti (se attivo)
-        'tempoRisoluzioneGuasto': tempoRisoluzioneGuasto if checkboxProbabilitaGuasti else "Non attivo", # Registro nel dizionario il tempo di risoluzione guasti (se attivo)
+        'numeroGuasti': numeroGuasti if checkboxProbabilitaGuasti else "Non attivo", # Registro nel dizionario il numero di guasti (se attivo)
+        'tempoRisoluzioneGuasti': tempoRisoluzioneGuasti if checkboxProbabilitaGuasti else "Non attivo", # Registro nel dizionario il tempo di risoluzione guasti (se attivo)
         'tempoDiSettaggio': tempoDiSettaggio if checkboxTempoDiSettaggio else "Non attivo", # Registro nel dizionario il tempo di settaggio (se attivo)
         'tempoProduzioneTotale': round(tempoProduzioneTotale, 2), # Registro nel dizionario il tempo di produzione totale (arrotondato a due crifre decimali)
-        'produzioneProdotto1': numeroProdotti.get("Raccorderia a pressare", 0), # Registro nel dizionario il valore da produrre del prodotto "Raccorderia a pressare"
-        'produzioneProdotto2': numeroProdotti.get("Sistemi di scarico", 0), # Registro nel dizionario il valore da produrre del prodotto "Sistemi di scarico"
-        'produzioneProdotto3': numeroProdotti.get("Collari", 0), # Registro nel dizionario il valore da produrre del prodotto "Collari"
-        'tempoDiProduzioneProdotto1': tempoDiProduzioneProdotto1, # Registro nel dizionario il tempo totale di produzione per "Raccorderia a pressare"
-        'tempoDiProduzioneProdotto2': tempoDiProduzioneProdotto2, # Registro nel dizionario il tempo totale di produzione per "Sistemi di scarico"
-        'tempoDiProduzioneProdotto3': tempoDiProduzioneProdotto3, # Registro nel dizionario il tempo totale di produzione per "Collari"
-        'capacitaGiornalieraRepartoStampaggioProdotto1': capacitaProduttiva["Raccorderia a pressare"]["tempoStampaggioRaccorderiaapressare"], # Registro nel dizionario la capacità giornaliera del reparto "Stampaggio" riguardo la produzione del prodotto "Raccorderia a pressare"
-        'capacitaGiornalieraRepartoTrattamentoSuperficialeProdotto1': capacitaProduttiva["Raccorderia a pressare"]["tempoTrattamentoSuperficialeRaccorderiaapressare"], # Registro nel dizionario la capacità giornaliera del reparto "Trattamento superficiale" riguardo la produzione del prodotto "Raccorderia a pressare"
-        'capacitaGiornalieraRepartoPiegaturaProdotto1': "ND", # Registro nel dizionario la capacità giornaliera del reparto "Piegatura" riguardo la produzione del prodotto "Raccorderia a pressare"
-        'capacitaGiornalieraRepartoAssemblaggioProdotto1': capacitaProduttiva["Raccorderia a pressare"]["tempoAssemblaggioRaccorderiaapressare"], # Registro nel dizionario la capacità giornaliera del reparto "Assemblaggio" riguardo la produzione del prodotto "Raccorderia a pressare"
-        'capacitaGiornalieraRepartoConfezionamentoProdotto1': capacitaProduttiva["Raccorderia a pressare"]["tempoConfezionamentoRaccorderiaapressare"], # Registro nel dizionario la capacità giornaliera del reparto "Confezionamento" riguardo la produzione del prodotto "Raccorderia a pressare"
-        'capacitaGiornalieraRepartoStampaggioProdotto2': capacitaProduttiva["Sistemi di scarico"]["tempoStampaggioSistemidiscarico"], # Registro nel dizionario la capacità giornaliera del reparto "Stampaggio" riguardo la produzione del prodotto "Sistemi di scarico"
-        'capacitaGiornalieraRepartoTrattamentoSuperficialeProdotto2': capacitaProduttiva["Sistemi di scarico"]["tempoTrattamentoSuperficialeSistemidiscarico"], # Registro nel dizionario la capacità giornaliera del reparto "Trattamento superficiale" riguardo la produzione del prodotto "Sistemi di scarico"
-        'capacitaGiornalieraRepartoPiegaturaProdotto2': capacitaProduttiva["Sistemi di scarico"]["tempoPiegaturaSistemidiscarico"], # Registro nel dizionario la capacità giornaliera del reparto "Piegatura" riguardo la produzione del prodotto "Sistemi di scarico"
-        'capacitaGiornalieraRepartoAssemblaggioProdotto2': capacitaProduttiva["Sistemi di scarico"]["tempoAssemblaggioSistemidiscarico"], # Registro nel dizionario la capacità giornaliera del reparto "Assemblaggio" riguardo la produzione del prodotto "Sistemi di scarico"
-        'capacitaGiornalieraRepartoConfezionamentoProdotto2': capacitaProduttiva["Sistemi di scarico"]["tempoConfezionamentoSistemidiscarico"], # Registro nel dizionario la capacità giornaliera del reparto "Confezionamento" riguardo la produzione del prodotto "Sistemi di scarico"
-        'capacitaGiornalieraRepartoStampaggioProdotto3': capacitaProduttiva["Collari"]["tempoStampaggioCollari"], # Registro nel dizionario la capacità giornaliera del reparto "Stampaggio" riguardo la produzione del prodotto "Collari"
-        'capacitaGiornalieraRepartoTrattamentoSuperficialeProdotto3': "ND", # Registro nel dizionario la capacità giornaliera del reparto "Trattamento superficiale" riguardo la produzione del prodotto "Collari"
-        'capacitaGiornalieraRepartoPiegaturaProdotto3': capacitaProduttiva["Collari"]["tempoPiegaturaCollari"], # Registro nel dizionario la capacità giornaliera del reparto "Piegatura" riguardo la produzione del prodotto "Collari"
-        'capacitaGiornalieraRepartoAssemblaggioProdotto3': capacitaProduttiva["Collari"]["tempoAssemblaggioCollari"], # Registro nel dizionario la capacità giornaliera del reparto "Assemblaggio" riguardo la produzione del prodotto "Collari"
-        'capacitaGiornalieraRepartoConfezionamentoProdotto3': capacitaProduttiva["Collari"]["tempoConfezionamentoCollari"], # Registro nel dizionario la capacità giornaliera del reparto "Confezionamento" riguardo la produzione del prodotto "Collari"
+        'produzioneProdotto1': numeroProdotti.get("Curve", 0), # Registro nel dizionario il valore da produrre del prodotto "Curve"
+        'produzioneProdotto2': numeroProdotti.get("Tee", 0), # Registro nel dizionario il valore da produrre del prodotto "Tee"
+        'produzioneProdotto3': numeroProdotti.get("Manicotti", 0), # Registro nel dizionario il valore da produrre del prodotto "Manicotti"
+        'tempoDiProduzioneProdotto1': round(tempoDiProduzioneProdotto1, 2), # Registro nel dizionario il tempo totale di produzione per "Curve"
+        'tempoDiProduzioneProdotto2': round(tempoDiProduzioneProdotto2, 2), # Registro nel dizionario il tempo totale di produzione per "Tee"
+        'tempoDiProduzioneProdotto3': round(tempoDiProduzioneProdotto3, 2), # Registro nel dizionario il tempo totale di produzione per "Manicotti"
+
+        # Registrazione Prodotto 1
+        # Registro nel dizionario la capacità giornaliera del reparto "Taglio" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoTaglioProdotto1': capacitaProduttiva["Curve"]["tempoTaglioCurve"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Tornitura" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoTornituraProdotto1': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Piegatura" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoPiegaturaProdotto1': capacitaProduttiva["Curve"]["tempoPiegaturaCurve"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Deformatura" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoDeformaturaProdotto1': capacitaProduttiva["Curve"]["tempoDeformaturaCurve"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Foratura" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoForaturaProdotto1': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Saldatura" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoSaldaturaProdotto1': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Trattamento termico" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoTrattamentoTermicoProdotto1': capacitaProduttiva["Curve"]["tempoTrattamentoTermicoCurve"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Montaggio o Marcatura" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoMontaggioOrMarcaturaProdotto1': capacitaProduttiva["Curve"]["tempoMontaggioOrMarcaturaCurve"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Imballo" riguardo la produzione del prodotto "Curve"
+        'capacitaGiornalieraRepartoImballoProdotto1': capacitaProduttiva["Curve"]["tempoImballoCurve"],
+
+        # Registrazione Prodotto 2
+        # Registro nel dizionario la capacità giornaliera del reparto "Taglio" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoTaglioProdotto2': capacitaProduttiva["Tee"]["tempoTaglioTee"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Tornitura" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoTornituraProdotto2': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Piegatura" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoPiegaturaProdotto2': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Deformatura" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoDeformaturaProdotto2': capacitaProduttiva["Tee"]["tempoDeformaturaTee"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Foratura" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoForaturaProdotto2': capacitaProduttiva["Tee"]["tempoForaturaTee"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Saldatura" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoSaldaturaProdotto2': capacitaProduttiva["Tee"]["tempoSaldaturaTee"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Trattamento termico" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoTrattamentoTermicoProdotto2': capacitaProduttiva["Tee"]["tempoTrattamentoTermicoTee"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Montaggio o Marcatura" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoMontaggioOrMarcaturaProdotto2': capacitaProduttiva["Tee"]["tempoMontaggioOrMarcaturaTee"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Imballo" riguardo la produzione del prodotto "Tee"
+        'capacitaGiornalieraRepartoImballoProdotto2': capacitaProduttiva["Tee"]["tempoImballoTee"],
+
+        # Registrazione Prodotto 3
+        # Registro nel dizionario la capacità giornaliera del reparto "Taglio" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoTaglioProdotto3': capacitaProduttiva["Manicotti"]["tempoTaglioManicotti"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Tornitura" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoTornituraProdotto3': capacitaProduttiva["Manicotti"]["tempoTornituraManicotti"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Piegatura" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoPiegaturaProdotto3': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Deformatura" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoDeformaturaProdotto3': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Foratura" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoForaturaProdotto3': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Saldatura" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoSaldaturaProdotto3': "ND",
+        # Registro nel dizionario la capacità giornaliera del reparto "Trattamento termico" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoTrattamentoTermicoProdotto3': capacitaProduttiva["Manicotti"]["tempoTrattamentoTermicoManicotti"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Montaggio o Marcatura" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoMontaggioOrMarcaturaProdotto3': capacitaProduttiva["Manicotti"]["tempoMontaggioOrMarcaturaManicotti"],
+        # Registro nel dizionario la capacità giornaliera del reparto "Imballo" riguardo la produzione del prodotto "Manicotti"
+        'capacitaGiornalieraRepartoImballoProdotto3': capacitaProduttiva["Manicotti"]["tempoImballoManicotti"],
+
         'nomeLotto': datetime.datetime.now().strftime("%Y%m%d%H%M%S") # Registro nel dizionario il valore del lotto. Per questa simulazione utilizzerò il valore del timestamp
     }
 
@@ -118,7 +184,7 @@ def calcolatoreCapacitaReparto(parametriProduzione):
 
 # Funzione per calcolare i tempi di produzione per ogni reparto e prodotto
 def calcoloTempoReparti(parametriProduzione, numeroProdotti):
-    tempiReparto = {reparto: 0 for reparto in ["Stampaggio", "TrattamentoSuperficiale", "Piegatura", "Assemblaggio", "Confezionamento"]} # Creo un dizionario per tenere traccia del tempo utilizzato da ogni reparto
+    tempiReparto = {reparto: 0 for reparto in ["Taglio", "Tornitura", "Piegatura", "Deformatura", "Foratura", "Saldatura", "TrattamentoTermico", "MontaggioOrMarcatura", "Imballo"]} # Creo un dizionario per tenere traccia del tempo utilizzato da ogni reparto
     tempiProdottoReparto = {prodotto: {reparto: 0 for reparto in tempiReparto} for prodotto in numeroProdotti} # Creo un dizionario per tenere traccia del tempo utilizzato per ogni prodotto in ogni reparto
 
     tempoProduzioneTotale = 0 # Creo una variabile per sommare il tempo totale della produzione
@@ -145,16 +211,30 @@ def calcoloTempoReparti(parametriProduzione, numeroProdotti):
 
 # Funzione per generare i parametri di produzione casualmente all'interno di range stabiliti
 def generaParametriProduzione():
-
     prodotti = {
-        "Raccorderia a pressare": [
-            ("Stampaggio", 1, 5), ("TrattamentoSuperficiale", 1, 3), ("Assemblaggio", 4, 8), ("Confezionamento", 1, 2)
+        "Curve": [
+            ("Taglio", 0.054, 0.066),
+            ("Piegatura", 0.054, 0.066),
+            ("Deformatura", 0.18, 0.22),
+            ("TrattamentoTermico", 0.022, 0.026),
+            ("MontaggioOrMarcatura", 0.09, 0.11),
+            ("Imballo", 0.036, 0.044)
         ],
-        "Sistemi di scarico": [
-            ("Stampaggio", 1, 10), ("Piegatura", 1, 2), ("TrattamentoSuperficiale", 1, 2), ("Assemblaggio", 8, 15), ("Confezionamento", 2, 5)
+        "Tee": [
+            ("Taglio", 0.077, 0.095),
+            ("Deformatura", 0.54, 0.66),
+            ("Foratura", 0.9, 1.1),
+            ("Saldatura", 0.338, 0.413),
+            ("TrattamentoTermico", 0.022, 0.026),
+            ("MontaggioOrMarcatura", 0.36, 0.44),
+            ("Imballo", 0.036, 0.044)
         ],
-        "Collari": [
-            ("Stampaggio", 1, 3), ("Piegatura", 1, 2), ("Assemblaggio", 2, 4), ("Confezionamento", 2, 3)
+        "Manicotti": [
+            ("Taglio", 0.09, 0.11),
+            ("Tornitura", 0.12, 0.146),
+            ("TrattamentoTermico", 0.022, 0.026),
+            ("MontaggioOrMarcatura", 0.135, 0.165),
+            ("Imballo", 0.036, 0.044)
         ]
     } # Dizionario dei prodotti con i rispettivi reparti e range di tempo di produzione in minuti
 
@@ -165,14 +245,23 @@ def generaParametriProduzione():
         parametri[prodotto] = {}  # Creo un dizionario vuoto per memorizzare i tempi di produzione del prodotto
         for reparto in reparti: # Ciclo per ogni reparto relativo al prodotto
             nomeReparto, minTempo, maxTempo = reparto # Recupero il nome del reparto e i relativi range di tempo
-            tempoCasuale = random.randint(minTempo, maxTempo) # Genero casualmente un tempo di produzione per il prodotto nel range previsto dal reparto
+            tempoCasuale = random.uniform(minTempo, maxTempo) # Genero casualmente un tempo di produzione per il prodotto nel range previsto dal reparto
             tempoChiave = f"tempo{nomeReparto.replace(' ', '')}{prodotto.replace(' ', '')}" # Costruisco la chiave per il dizionario
             parametri[prodotto][tempoChiave] = tempoCasuale # Assegno il tempo di produzione casuale generato per il prodotto al reparto
 
     return parametri # Restituisco il dizionario al chiamante
 
-# Funzione per generare casualmente il numero di prodotti da produrre nelle tre varianti
+# Funzione per generare casualmente il numero di prodotti da produrre nel lotto nelle tre varianti
 def generaNumeroProdottiDaProdurre():
-    prodotti = ["Raccorderia a pressare", "Sistemi di scarico", "Collari"] # Dizionario contentene le tre varianti prodotto
-    numeroProdotti = {prodotto: random.randint(1000, 10000) for prodotto in prodotti} # Associo ad ogni prodotto un numero casuale di unità da produrre in un range prestabilito
-    return numeroProdotti # La funzione ritorna il dizionario al termine dell'elaborazione
+
+    # La produzione aziendale avviene per lotti che possono avere dimensioni diverse, ma stabilite
+    prodotti = {
+        "Curve": [20000, 50000],  # Lotti disponibili per "Curve"
+        "Tee": [4000, 8000, 12000],  # Lotti disponibili per "Tee"
+        "Manicotti": [15000, 30000, 50000]  # Lotti disponibili per "Manicotti"
+    } # Dizionario contentene le tre varianti prodotto
+
+    # Ciclo per associare ad ogni prodotto un numero casuale di unità da produrre nel un range stabilito
+    numeroProdotti = {prodotto: random.choice(lotti) for prodotto, lotti in prodotti.items()}
+
+    return numeroProdotti  # La funzione ritorna il dizionario al termine dell'elaborazione
