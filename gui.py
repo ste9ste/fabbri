@@ -24,7 +24,7 @@ class Gui(QWidget):
 
         # Sezione Finestra
         self.setWindowTitle('Fabrix') # Impostazione titolo finestra
-        self.resize(600, 900) # Impostazione dimensioni finestra
+        self.resize(800, 900) # Impostazione dimensioni finestra
         self.center() # Richiamo funzione per centrare la finestra
         layoutPrincipale = QVBoxLayout() # Creazione layout principale
         layoutPrincipale.setAlignment(Qt.AlignTop) # Allineamento widget in alto
@@ -83,7 +83,7 @@ class Gui(QWidget):
         # Sezione parametro "Tempo risoluzione guasto"
         self.testoTempoRisoluzioneGuasto = QLineEdit() # Creazione casella di testo "Tempo risoluzione guasto"
         self.testoTempoRisoluzioneGuasto.setReadOnly(True) # Set casella di testo "Tempo risoluzione guasto" in sola lettura
-        colonna2.addWidget(QLabel("Tempo risoluzione guasto")) # Aggiunta didascalia "Tempo risoluzione guasto" a colonna 2
+        colonna2.addWidget(QLabel("Tempo risoluzione guasti")) # Aggiunta didascalia "Tempo risoluzione guasto" a colonna 2
         colonna2.addWidget(self.testoTempoRisoluzioneGuasto) # Aggiunta casella di testo "Tempo risoluzione guasto" a colonna 2
 
         # Sezione indicazione "Lotto"
@@ -104,7 +104,7 @@ class Gui(QWidget):
         colonna1 = QVBoxLayout() # Creazione layout per colonna 1
 
         # Sezione gruppo "Produzione Prodotto 1" - Colonna 1
-        groupBoxProduzione1 = QGroupBox("Produzione Raccorderia a pressare") # Creazione gruppo "Produzione Prodotto 1"
+        groupBoxProduzione1 = QGroupBox("Produzione Curve") # Creazione gruppo "Produzione Prodotto 1"
         groupBoxProduzione1Layout = QVBoxLayout() # Creazione layout verticale per gruppo "Produzione Prodotto 1"
         self.testoProduzioneProdotto1 = QLineEdit() # Creazione casella di testo "Produzione Prodotto 1"
         self.testoProduzioneProdotto1.setReadOnly(True) # Set casella di testo "Produzione Prodotto 1" in sola lettura
@@ -116,7 +116,7 @@ class Gui(QWidget):
         colonna1.addWidget(groupBoxProduzione1) # Aggiunta gruppo "Produzione Prodotto 1" a colonna 1
 
         # Sezione gruppo "Produzione Prodotto 2" - Colonna 1
-        groupBoxProduzione2 = QGroupBox("Produzione Sistemi di scarico") # Creazione gruppo "Produzione Prodotto 2"
+        groupBoxProduzione2 = QGroupBox("Produzione Tee") # Creazione gruppo "Produzione Prodotto 2"
         groupBoxProduzione2Layout = QVBoxLayout() # Creazione layout verticale per gruppo "Produzione Prodotto 2"
         self.testoProduzioneProdotto2 = QLineEdit() # Creazione casella di testo "Produzione Prodotto 2"
         self.testoProduzioneProdotto2.setReadOnly(True) # Set casella di testo "Produzione Prodotto 2" in sola lettura
@@ -128,7 +128,7 @@ class Gui(QWidget):
         colonna1.addWidget(groupBoxProduzione2) # Aggiunta gruppo "Produzione Prodotto 2" a colonna 1
 
         # Sezione gruppo "Produzione Prodotto 3" - Colonna 1
-        groupBoxProduzione3 = QGroupBox("Produzione Collari") # Creazione gruppo "Produzione Prodotto 3"
+        groupBoxProduzione3 = QGroupBox("Produzione Manicotti") # Creazione gruppo "Produzione Prodotto 3"
         groupBoxProduzione3Layout = QVBoxLayout() # Creazione layout verticale per gruppo "Produzione Prodotto 3"
         self.testoProduzioneProdotto3 = QLineEdit() # Creazione casella di testo "Produzione Prodotto 3"
         self.testoProduzioneProdotto3.setReadOnly(True) # Set casella di testo "Produzione Prodotto 3" in sola lettura
@@ -156,12 +156,11 @@ class Gui(QWidget):
 
         # Sezione tabella "Sezione Capacità giornaliera per reparto"
         self.tabellaCapacitaReparto = QTableWidget()  # Inizializzazione della tabella "Sezione Capacità giornaliera per reparto"
-        self.tabellaCapacitaReparto.setRowCount(5)  # Impostazione numero di righe
+        self.tabellaCapacitaReparto.setRowCount(9)  # Impostazione numero di righe
         self.tabellaCapacitaReparto.setColumnCount(3)  # Impostazione numero di colonne
         self.tabellaCapacitaReparto.setHorizontalHeaderLabels(["P1", "P2", "P3"])  # Aggiunta etichetta a colonne tabella
         self.tabellaCapacitaReparto.setVerticalHeaderLabels(
-            ["Stampaggio", "Piegatura", "Trattamento Superficiale", "Assemblaggio",
-             "Confezionamento"])  # Aggiunta etichetta a righe tabella
+            ["Taglio", "Tornitura", "Piegatura", "Deformatura", "Foratura", "Saldatura", "TrattamentoTermico", "MontaggioOrMarcatura", "Imballo"])  # Aggiunta etichetta a righe tabella
         self.tabellaCapacitaReparto.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) # Impostazione dimensioni colonne per spazio uniformemente
 
         # Cicli annidati per popolare righe e colonne della tabella con widget di tipo QLineEdit
@@ -193,7 +192,7 @@ class Gui(QWidget):
         self.setLayout(layoutPrincipale) # Imposto il layout principale come layout della finestra
         self.show() # Mostra la finestra
 
-    # Funzione per generare i dati della simulazione
+    # Funzione aggiornare l'interfaccia con i dati della simulazione
     def generaSimulazione(self):
         
         # Chiamo la funzione "simulate" passando lo stato dei checkbox per attivare o disattivare i parametri
@@ -214,14 +213,14 @@ class Gui(QWidget):
 
         # Aggiorno casella di testo "Probabilità guasti" con i risultati della generazione, se la checkbox corrispondente è attiva
         self.testoProbabilitaGuasti.setText(
-            f"1 ogni {risultati['probabilitaGuasti']} giorni" if self.checkboxProbabilitaGuasti.isChecked() else "Non attivo")
+            f"Numero guasti: {risultati['numeroGuasti']}" if self.checkboxProbabilitaGuasti.isChecked() else "Non attivo")
 
         # Aggiorno casella di testo "Tempi di settaggio" con i risultati della generazione, se la checkbox corrispondente è attiva
         self.testoTempoDiSettaggio.setText(
             f"{risultati['tempoDiSettaggio']} minuti" if self.checkboxTempoDiSettaggio.isChecked() else "Non attivo")
 
-        # Aggiorno casella di testo "Tempo risoluzione guasto" con i risultati della generazione
-        self.testoTempoRisoluzioneGuasto.setText(f"{risultati['tempoRisoluzioneGuasto']} minuti")
+        # Aggiorno casella di testo "Tempo risoluzione guasti" con i risultati della generazione
+        self.testoTempoRisoluzioneGuasto.setText(f"{risultati['tempoRisoluzioneGuasti']} minuti")
 
         # Aggiorno casella di testo "Lotto" con i risultati della generazione
         self.testoLotto.setText(risultati['nomeLotto'])
@@ -244,65 +243,122 @@ class Gui(QWidget):
         # Aggiorno casella di testo "Tempo di produzione prodotto 3" con i risultati della generazione
         self.testoTempoDiProduzioneProdotto3.setText(f"{risultati['tempoDiProduzioneProdotto3']} minuti")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Stampaggio" e "Prodotto "1"
-        self.lineEditStampaggioProdotto1 = self.tabellaCapacitaReparto.cellWidget(0, 0)
-        self.lineEditStampaggioProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoStampaggioProdotto1']}")
+        # Prodotto 1
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Taglio" e "Prodotto 1"
+        self.lineEditTaglioProdotto1 = self.tabellaCapacitaReparto.cellWidget(0, 0)
+        self.lineEditTaglioProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoTaglioProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Piegatura" e "Prodotto "1"
-        self.lineEditStampaggioProdotto1 = self.tabellaCapacitaReparto.cellWidget(1, 0)
-        self.lineEditStampaggioProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoPiegaturaProdotto1']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Tornitura" e "Prodotto 1"
+        self.lineEditTornituraProdotto1 = self.tabellaCapacitaReparto.cellWidget(1, 0)
+        self.lineEditTornituraProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoTornituraProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Trattamento Superficiale" e "Prodotto "1"
-        self.lineEditStampaggioProdotto1 = self.tabellaCapacitaReparto.cellWidget(2, 0)
-        self.lineEditStampaggioProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoTrattamentoSuperficialeProdotto1']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Piegatura" e "Prodotto 1"
+        self.lineEditPiegaturaProdotto1 = self.tabellaCapacitaReparto.cellWidget(2, 0)
+        self.lineEditPiegaturaProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoPiegaturaProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Assemblaggio" e "Prodotto "1"
-        self.lineEditStampaggioProdotto1 = self.tabellaCapacitaReparto.cellWidget(3, 0)
-        self.lineEditStampaggioProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoAssemblaggioProdotto1']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Deformatura" e "Prodotto 1"
+        self.lineEditDeformaturaProdotto1 = self.tabellaCapacitaReparto.cellWidget(3, 0)
+        self.lineEditDeformaturaProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoDeformaturaProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Confezionamento" e "Prodotto "1"
-        self.lineEditStampaggioProdotto1 = self.tabellaCapacitaReparto.cellWidget(4, 0)
-        self.lineEditStampaggioProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoConfezionamentoProdotto1']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Foratura" e "Prodotto 1"
+        self.lineEditForaturaProdotto1 = self.tabellaCapacitaReparto.cellWidget(4, 0)
+        self.lineEditForaturaProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoForaturaProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Stampaggio" e "Prodotto "2"
-        self.lineEditStampaggioProdotto2 = self.tabellaCapacitaReparto.cellWidget(0, 1)
-        self.lineEditStampaggioProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoStampaggioProdotto2']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Saldatura" e "Prodotto 1"
+        self.lineEditSaldaturaProdotto1 = self.tabellaCapacitaReparto.cellWidget(5, 0)
+        self.lineEditSaldaturaProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoSaldaturaProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Piegatura" e "Prodotto "1"
-        self.lineEditStampaggioProdotto2 = self.tabellaCapacitaReparto.cellWidget(1, 1) 
-        self.lineEditStampaggioProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoPiegaturaProdotto2']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Trattamento Termico" e "Prodotto 1"
+        self.lineEditTrattamentoTermicoProdotto1 = self.tabellaCapacitaReparto.cellWidget(6, 0)
+        self.lineEditTrattamentoTermicoProdotto1.setText(
+            f"{risultati['capacitaGiornalieraRepartoTrattamentoTermicoProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Trattamento Superficiale" e "Prodotto "2"
-        self.lineEditStampaggioProdotto2 = self.tabellaCapacitaReparto.cellWidget(2, 1)
-        self.lineEditStampaggioProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoTrattamentoSuperficialeProdotto2']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Montaggio o Marcatura" e "Prodotto 1"
+        self.lineEditMontaggioOrMarcaturaProdotto1 = self.tabellaCapacitaReparto.cellWidget(7, 0)
+        self.lineEditMontaggioOrMarcaturaProdotto1.setText(
+            f"{risultati['capacitaGiornalieraRepartoMontaggioOrMarcaturaProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Assemblaggio" e "Prodotto "2"
-        self.lineEditStampaggioProdotto2 = self.tabellaCapacitaReparto.cellWidget(3, 1)
-        self.lineEditStampaggioProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoAssemblaggioProdotto2']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Imballo" e "Prodotto 1"
+        self.lineEditImballoProdotto1 = self.tabellaCapacitaReparto.cellWidget(8, 0)
+        self.lineEditImballoProdotto1.setText(f"{risultati['capacitaGiornalieraRepartoImballoProdotto1']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Confezionamento" e "Prodotto "2"
-        self.lineEditStampaggioProdotto2 = self.tabellaCapacitaReparto.cellWidget(4, 1)
-        self.lineEditStampaggioProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoConfezionamentoProdotto2']}")
+        # Prodotto 2
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Taglio" e "Prodotto 2"
+        self.lineEditTaglioProdotto2 = self.tabellaCapacitaReparto.cellWidget(0, 1)
+        self.lineEditTaglioProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoTaglioProdotto2']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Stampaggio" e "Prodotto "3"
-        self.lineEditStampaggioProdotto3 = self.tabellaCapacitaReparto.cellWidget(0, 2)
-        self.lineEditStampaggioProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoStampaggioProdotto3']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Tornitura" e "Prodotto 2"
+        self.lineEditTornituraProdotto2 = self.tabellaCapacitaReparto.cellWidget(1, 1)
+        self.lineEditTornituraProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoTornituraProdotto2']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Piegatura" e "Prodotto "3"
-        self.lineEditStampaggioProdotto3 = self.tabellaCapacitaReparto.cellWidget(1, 2)
-        self.lineEditStampaggioProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoPiegaturaProdotto3']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Piegatura" e "Prodotto 2"
+        self.lineEditPiegaturaProdotto2 = self.tabellaCapacitaReparto.cellWidget(2, 1)
+        self.lineEditPiegaturaProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoPiegaturaProdotto2']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Trattamento Superficiale" e "Prodotto "3"
-        self.lineEditStampaggioProdotto3 = self.tabellaCapacitaReparto.cellWidget(2, 2)
-        self.lineEditStampaggioProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoTrattamentoSuperficialeProdotto3']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Deformatura" e "Prodotto 2"
+        self.lineEditDeformaturaProdotto2 = self.tabellaCapacitaReparto.cellWidget(3, 1)
+        self.lineEditDeformaturaProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoDeformaturaProdotto2']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Assemblaggio" e "Prodotto "3"
-        self.lineEditStampaggioProdotto3 = self.tabellaCapacitaReparto.cellWidget(3, 2)
-        self.lineEditStampaggioProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoAssemblaggioProdotto3']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Foratura" e "Prodotto 2"
+        self.lineEditForaturaProdotto2 = self.tabellaCapacitaReparto.cellWidget(4, 1)
+        self.lineEditForaturaProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoForaturaProdotto2']}")
 
-        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Confezionamento" e "Prodotto "3"
-        self.lineEditStampaggioProdotto3 = self.tabellaCapacitaReparto.cellWidget(4, 2)
-        self.lineEditStampaggioProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoConfezionamentoProdotto3']}")
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Saldatura" e "Prodotto 2"
+        self.lineEditSaldaturaProdotto2 = self.tabellaCapacitaReparto.cellWidget(5, 1)
+        self.lineEditSaldaturaProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoSaldaturaProdotto2']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Trattamento Termico" e "Prodotto 2"
+        self.lineEditTrattamentoTermicoProdotto2 = self.tabellaCapacitaReparto.cellWidget(6, 1)
+        self.lineEditTrattamentoTermicoProdotto2.setText(
+            f"{risultati['capacitaGiornalieraRepartoTrattamentoTermicoProdotto2']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Montaggio o Marcatura" e "Prodotto 2"
+        self.lineEditMontaggioOrMarcaturaProdotto2 = self.tabellaCapacitaReparto.cellWidget(7, 1)
+        self.lineEditMontaggioOrMarcaturaProdotto2.setText(
+            f"{risultati['capacitaGiornalieraRepartoMontaggioOrMarcaturaProdotto2']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Imballo" e "Prodotto 2"
+        self.lineEditImballoProdotto2 = self.tabellaCapacitaReparto.cellWidget(8, 1)
+        self.lineEditImballoProdotto2.setText(f"{risultati['capacitaGiornalieraRepartoImballoProdotto2']}")
+
+        # Prodotto 3
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Taglio" e "Prodotto 3"
+        self.lineEditTaglioProdotto3 = self.tabellaCapacitaReparto.cellWidget(0, 2)
+        self.lineEditTaglioProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoTaglioProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Tornitura" e "Prodotto 3"
+        self.lineEditTornituraProdotto3 = self.tabellaCapacitaReparto.cellWidget(1, 2)
+        self.lineEditTornituraProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoTornituraProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Piegatura" e "Prodotto 3"
+        self.lineEditPiegaturaProdotto3 = self.tabellaCapacitaReparto.cellWidget(2, 2)
+        self.lineEditPiegaturaProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoPiegaturaProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Deformatura" e "Prodotto 3"
+        self.lineEditDeformaturaProdotto3 = self.tabellaCapacitaReparto.cellWidget(3, 2)
+        self.lineEditDeformaturaProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoDeformaturaProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Foratura" e "Prodotto 3"
+        self.lineEditForaturaProdotto3 = self.tabellaCapacitaReparto.cellWidget(4, 2)
+        self.lineEditForaturaProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoForaturaProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Saldatura" e "Prodotto 3"
+        self.lineEditSaldaturaProdotto3 = self.tabellaCapacitaReparto.cellWidget(5, 2)
+        self.lineEditSaldaturaProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoSaldaturaProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Trattamento Termico" e "Prodotto 3"
+        self.lineEditTrattamentoTermicoProdotto3 = self.tabellaCapacitaReparto.cellWidget(6, 2)
+        self.lineEditTrattamentoTermicoProdotto3.setText(
+            f"{risultati['capacitaGiornalieraRepartoTrattamentoTermicoProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Montaggio o Marcatura" e "Prodotto 3"
+        self.lineEditMontaggioOrMarcaturaProdotto3 = self.tabellaCapacitaReparto.cellWidget(7, 2)
+        self.lineEditMontaggioOrMarcaturaProdotto3.setText(
+            f"{risultati['capacitaGiornalieraRepartoMontaggioOrMarcaturaProdotto3']}")
+
+        # Aggiorno tabella "Capacità giornaliera reparto", cella corrispondente a reparto "Imballo" e "Prodotto 3"
+        self.lineEditImballoProdotto3 = self.tabellaCapacitaReparto.cellWidget(8, 2)
+        self.lineEditImballoProdotto3.setText(f"{risultati['capacitaGiornalieraRepartoImballoProdotto3']}")
 
         # Sezione per la gestione della visualizzazione del tempo complessivo di produzione
         tempoMinuti = int(risultati['tempoProduzioneTotale']) # Assegno alla variabile i minuti totali di produzione come da generazione
